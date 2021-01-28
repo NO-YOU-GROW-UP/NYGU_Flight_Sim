@@ -10,6 +10,18 @@ UCLASS()
 class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 {
 	GENERATED_BODY()
+	
+	/*Plane Mesh*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* PlaneBodyMesh;
+	
+	/*Camera Boom Behind Plane*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
+
+	/*Third Person Camera*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* ThirdPersonCamera;
 
 public:
 	// Sets default values for this pawn's properties
