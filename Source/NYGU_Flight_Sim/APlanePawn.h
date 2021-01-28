@@ -12,9 +12,17 @@ class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 	GENERATED_BODY()
 	
 	/*Plane Mesh*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* PlaneBodyMesh;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* LeftAileron;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* RightAileron;
+
+
+
 	/*Camera Boom Behind Plane*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
