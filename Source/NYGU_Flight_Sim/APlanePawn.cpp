@@ -14,11 +14,41 @@ AAPlanePawn::AAPlanePawn()
 	/*Plane Mesh Body Setup*/
 	PlaneBodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlaneBody"));
 	PlaneBodyMesh->SetupAttachment(RootComponent);
+	
+	/*Glass Setup*/
+	Glass = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Glass"));
+	Glass->SetupAttachment(PlaneBodyMesh);
+	
 
+	/*Ailerons Setup*/
 	LeftAileron = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftAileron"));
 	LeftAileron->SetupAttachment(PlaneBodyMesh,FName("aileronL"));
 	RightAileron = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightAileron"));
 	RightAileron->SetupAttachment(PlaneBodyMesh, FName("aileronR"));
+
+	/*Flaps Setup*/
+	LeftFlaps = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftFlaps"));
+	LeftFlaps->SetupAttachment(PlaneBodyMesh, FName("flapsL"));
+	RightFlaps = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightFlaps"));
+	RightFlaps->SetupAttachment(PlaneBodyMesh, FName("flapsR"));
+
+
+	/*Elevator Setup*/
+	LeftElevator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftElevator"));
+	LeftElevator->SetupAttachment(PlaneBodyMesh, FName("elevatorL"));
+	RightElevator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightElevator"));
+	RightElevator->SetupAttachment(PlaneBodyMesh, FName("elevatorR"));
+
+
+
+	/*Rudder Setup*/
+	LeftRudder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftRudder"));
+	LeftRudder->SetupAttachment(PlaneBodyMesh, FName("rudderL"));
+	RightRudder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightRudder"));
+	RightRudder->SetupAttachment(PlaneBodyMesh, FName("rudderR"));
+
+
+
 
 
 

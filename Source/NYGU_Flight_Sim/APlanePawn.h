@@ -11,15 +11,38 @@ class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 {
 	GENERATED_BODY()
 	
-	/*Plane Mesh*/
+	/* Plane Meshes Body Glass Ailerons Flaps and Rudder */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* PlaneBodyMesh;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* Glass;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* LeftAileron;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* RightAileron;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* LeftElevator;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* RightElevator;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* LeftRudder;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* RightRudder;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* LeftFlaps;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* RightFlaps;
+
+	/**********************************************************************************************/
 
 
 
