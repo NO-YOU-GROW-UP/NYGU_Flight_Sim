@@ -41,6 +41,7 @@ void UPlaneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 void UPlaneMovementComponent::UpdateLocation()
 {
 	
-	UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), GetWorld()->GetDeltaSeconds());
-
+	//UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), GetWorld()->GetDeltaSeconds());
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f"), GetWorld()->TimeSeconds));
+	
 }
