@@ -12,6 +12,15 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+		/*Variables*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float Gravity;
+
+
+
+		UFUNCTION()
+		void UpdateLocation();
+
 public:	
 	// Sets default values for this component's properties
 	UPlaneMovementComponent();
