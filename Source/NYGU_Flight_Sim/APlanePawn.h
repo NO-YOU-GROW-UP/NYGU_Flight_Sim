@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "PlaneMovementComponent.h"
 #include "APlanePawn.generated.h"
+
 
 UCLASS()
 class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
@@ -53,6 +55,10 @@ class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 	/*Third Person Camera*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* ThirdPersonCamera;
+
+	/*Plane Movement Component*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UPlaneMovementComponent* PlaneMovementComponent;
 
 public:
 	// Sets default values for this pawn's properties

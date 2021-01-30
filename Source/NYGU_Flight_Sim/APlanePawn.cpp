@@ -48,7 +48,8 @@ AAPlanePawn::AAPlanePawn()
 	RightRudder->SetupAttachment(PlaneBodyMesh, FName("rudderR"));
 
 
-
+	/*Plane Movement Component*/
+	PlaneMovementComponent = CreateDefaultSubobject<UPlaneMovementComponent>(TEXT("PlaneMovementComponent"));
 
 
 
@@ -68,8 +69,8 @@ AAPlanePawn::AAPlanePawn()
 	
 	
 
-
-
+	
+	
 
 }
 
