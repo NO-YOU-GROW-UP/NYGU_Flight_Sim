@@ -13,8 +13,11 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	/*Setup Physics Values*/
-
-
+	Gravity = 981.f;
+	Drag = 0.25f;
+	ThrustMultiplier = 2500.f;
+	ProjectedSpeed = 0;
+	CurrentSpeed = 0;
 
 	// ...
 }
@@ -35,13 +38,18 @@ void UPlaneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	UpdateLocation();
+	UpdateLocation(DeltaTime);
 }
 
-void UPlaneMovementComponent::UpdateLocation()
+void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 {
 	
-	//UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), GetWorld()->GetDeltaSeconds());
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f"), GetWorld()->TimeSeconds));
-	
+	//interp from Current Speed To Projected
+	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, ProjectedSpeed, DeltaTime, Drag);
+
+	FVector Move =  DeltaTime * CurrentSpeed*GetOwner()->GetActorForwardVector();
+	GetOwner()->AddActorWorldOffset(Move,true);
 }
+
+//UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), GetWorld()->GetDeltaSeconds());
+//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f"), GetWorld()->TimeSeconds));

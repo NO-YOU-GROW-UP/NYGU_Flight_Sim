@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Math/UnrealMathUtility.h"
 #include "PlaneMovementComponent.generated.h"
 
 
@@ -12,14 +13,31 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-		/*Variables*/
+		/** Gravity 981 Default */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
+	    
+		/*Drag Multiplier Between 0 and 1 */
+	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float Drag;
+		
+		/*Current forward thrust of Plane can set above 0 to start in the air*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float CurrentSpeed;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float ThrustMultiplier;
+
+		/*Speed Plane is attempting to reach based on throttle setting Current speed will change to this*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float ProjectedSpeed;
+
+
 
 
 
 		UFUNCTION()
-		void UpdateLocation();
+		void UpdateLocation(float DeltaTime);
 
 public:	
 	// Sets default values for this component's properties
