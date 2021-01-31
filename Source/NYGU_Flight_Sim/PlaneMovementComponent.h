@@ -26,18 +26,24 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		float CurrentSpeed;
 		
 		/*Speed Plane is attempting to reach based on throttle setting Current speed will change to this*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float ProjectedSpeed;
-		
+
 		/*Max speed the plane can attempt to go*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float MaxSpeed;
+
+		/*Throttle Percentage 0 to 1*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float ThrottlePercentage;
 
 		/*How Fast the throttle will change the speed over 1 second*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float ThrottleMultiplier;
 
-
+		/*How Fast the throttle will change the speed over 1 second*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float EqualLiftSpeed;
 
 
 		UFUNCTION()

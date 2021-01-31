@@ -19,6 +19,7 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	ProjectedSpeed = 0;
 	CurrentSpeed = 0;
 	MaxSpeed = 5000;
+	EqualLiftSpeed = 3000;
 
 	// ...
 }
@@ -65,22 +66,27 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 }
 
 
-
+//Add change throttle up or down with input axis
 void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 {
 	//axis input -1 to 1 multiplied by the amount of speed change per second
 	float ChangeInSpeed = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
  
 	ProjectedSpeed = FMath::Clamp<float>(ProjectedSpeed + ChangeInSpeed, 0, MaxSpeed);
-
+	ThrottlePercentage = ProjectedSpeed / MaxSpeed;
 }
 
+//Set throttle percent of total max speed
 void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 {
+
+	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0, 1);
 
 	ProjectedSpeed = MaxSpeed * ThrottlePercent;
 
 }
+
+
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 {
@@ -89,8 +95,9 @@ FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
+	float Lift = FMath::Clamp<float>( (CurrentSpeed / EqualLiftSpeed) * Gravity * DeltaTime , 0 , 1);
 	
-	return FVector(0,0,0);
+	return FVector(0,0,Lift);
 }
 
 
