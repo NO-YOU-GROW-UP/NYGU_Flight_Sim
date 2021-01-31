@@ -45,12 +45,19 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float EqualLiftSpeed;
 
+		/*Current Pitch of the Plane*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float CurrentPitch;
 
-		UFUNCTION()
+		/*How quickly the plane can pitch*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float PitchSpeed;
+
+		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetGravityForce(float DeltaTime);
 
 		
-		UFUNCTION()
+		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetLiftForce(float DeltaTime);
 
 
@@ -68,6 +75,11 @@ public:
 	/*Set Throttle to Specific percentage float between 0 and 1*/
 	UFUNCTION(BlueprintCallable, Category = "Throttle")
 	void SetThrottlePercent(float ThrottlePercent);
+
+	/*Add axis input to change pitch -1 to 1 float input*/
+	UFUNCTION(BlueprintCallable, Category = "Throttle")
+	void AddPitchInput(float PitchAxisInput);
+
 
 protected:
 	// Called when the game starts

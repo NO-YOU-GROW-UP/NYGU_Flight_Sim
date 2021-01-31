@@ -86,7 +86,14 @@ void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 
 }
 
+void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
+{
+	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds,PitchSpeed);
+	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0,0,CurrentPitch*PitchSpeed*GetWorld()->DeltaTimeSeconds)), true);
+}
 
+
+/*******Physics*********/
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 {
@@ -95,7 +102,7 @@ FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
-	float Lift = FMath::Clamp<float>( (CurrentSpeed / EqualLiftSpeed) * Gravity * DeltaTime , 0 , 1);
+	float Lift = FMath::Clamp<float>((CurrentSpeed / EqualLiftSpeed), 0, 1) * Gravity * DeltaTime;
 	
 	return FVector(0,0,Lift);
 }
