@@ -15,12 +15,13 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	/*Setup Physics Values*/
 	Gravity = 981.f;
 	Drag = 0.25f;
-	ThrottleMultiplier = 2500.f;
+	ThrustInterpSpeed = 0.25;
 	ProjectedThrust = 0;
 	CurrentForwardThrust = 0;
 	MaxThrust = 5000;
 	EqualLiftSpeed = 3000;
 
+	ThrottleMultiplier = 2500.f;
 	// ...
 }
 
@@ -53,7 +54,7 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 	
 
 	//Add Thrust Force
-	CurrentVelocity = GetForwardThrust(DeltaTime);
+	CurrentVelocity += GetForwardThrust(DeltaTime);
 
 	//Add Gravity Force
 	CurrentVelocity += GetGravityForce(DeltaTime);
@@ -99,7 +100,6 @@ FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 {
 
 	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, ThrustInterpSpeed);
-	f
 	return DeltaTime * CurrentForwardThrust * GetOwner()->GetActorForwardVector();
 
 }
@@ -118,5 +118,3 @@ FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 
 
 
-//UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), GetWorld()->GetDeltaSeconds());
-//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f"), GetWorld()->TimeSeconds));
