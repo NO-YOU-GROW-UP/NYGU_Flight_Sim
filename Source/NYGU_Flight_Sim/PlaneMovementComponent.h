@@ -13,6 +13,10 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+
+
+		/***********************Physics Variables**********************/
+
 		/** Gravity 981 Default */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
@@ -23,36 +27,48 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		
 		/*Current forward thrust of Plane can set above 0 to start in the air*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float CurrentSpeed;
-		
-		/*Speed Plane is attempting to reach based on throttle setting Current speed will change to this*/
-		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float ProjectedSpeed;
+		float CurrentForwardThrust;
 
 		/*Max speed the plane can attempt to go*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float MaxSpeed;
+		float MaxThrust;
 
-		/*Throttle Percentage 0 to 1*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float ThrottlePercentage;
+		/*Speed Plane is attempting to reach based on throttle setting Current speed will change to this*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float ProjectedThrust;
+		
 
-		/*How Fast the throttle will change the speed over 1 second*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float ThrottleMultiplier;
-
-		/*How Fast the throttle will change the speed over 1 second*/
+		/*Speed at which lift equals gravity*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float EqualLiftSpeed;
 
-		/*Current Pitch of the Plane*/
-		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float CurrentPitch;
+		
 
 		/*How quickly the plane can pitch*/
 		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float PitchSpeed;
+		
+		/*Current Pitch of the Plane*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float CurrentPitch;
+		
 
+		/**************Plane Mechanical Variables**********/
+
+		/*Throttle Percentage 0 to 1*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrottlePercentage;
+
+		/*How Fast the throttle will change the speed over 1 second*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrottleMultiplier;
+		
+		
+		
+		
+		/****Physics Functions******/
+
+		/*Calculate Gravity vector to being applied*/
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetGravityForce(float DeltaTime);
 

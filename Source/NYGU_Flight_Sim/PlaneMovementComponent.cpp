@@ -16,9 +16,9 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	Gravity = 981.f;
 	Drag = 0.25f;
 	ThrottleMultiplier = 2500.f;
-	ProjectedSpeed = 0;
-	CurrentSpeed = 0;
-	MaxSpeed = 5000;
+	ProjectedThrust = 0;
+	CurrentForwardThrust = 0;
+	MaxThrust = 5000;
 	EqualLiftSpeed = 3000;
 
 	// ...
@@ -50,10 +50,10 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 {
 	
 	//interp from Current Speed To Projected
-	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, ProjectedSpeed, DeltaTime, Drag);
+	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, Drag);
 
 	//Add Thrust Force
-	FVector Move =  DeltaTime * CurrentSpeed*GetOwner()->GetActorForwardVector();
+	FVector Move =  DeltaTime * CurrentForwardThrust*GetOwner()->GetActorForwardVector();
 
 	//Add Gravity Force
 	Move += GetGravityForce(DeltaTime);
@@ -70,10 +70,10 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 {
 	//axis input -1 to 1 multiplied by the amount of speed change per second
-	float ChangeInSpeed = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
+	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
  
-	ProjectedSpeed = FMath::Clamp<float>(ProjectedSpeed + ChangeInSpeed, 0, MaxSpeed);
-	ThrottlePercentage = ProjectedSpeed / MaxSpeed;
+	ProjectedThrust = FMath::Clamp<float>(ProjectedThrust + ChangeInThrust, 0, MaxThrust);
+	ThrottlePercentage = ProjectedThrust / MaxThrust;
 }
 
 //Set throttle percent of total max speed
@@ -82,7 +82,7 @@ void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 
 	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0, 1);
 
-	ProjectedSpeed = MaxSpeed * ThrottlePercent;
+	ProjectedThrust = MaxThrust * ThrottlePercent;
 
 }
 
@@ -93,7 +93,7 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 }
 
 
-/*******Physics*********/
+/************************Physics***************************/
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 {
@@ -102,7 +102,7 @@ FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
-	float Lift = FMath::Clamp<float>((CurrentSpeed / EqualLiftSpeed), 0, 1) * Gravity * DeltaTime;
+	float Lift = FMath::Clamp<float>((CurrentForwardThrust / EqualLiftSpeed), 0, 1) * Gravity * DeltaTime;
 	
 	return FVector(0,0,Lift);
 }
