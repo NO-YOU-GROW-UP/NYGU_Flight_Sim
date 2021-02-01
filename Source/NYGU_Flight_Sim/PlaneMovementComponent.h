@@ -25,7 +25,7 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
 	    
-		/*Drag Multiplier Between 0 and 1 */
+		/*Drag Coefficient Between 0 and 1 */
 	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Drag;
 		
@@ -79,11 +79,16 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetForwardThrust(float DeltaTime);
 
-		/*Calculate Gravity vector to being applied*/
+		/*Calculate Drag vector to be applied*/
+		UFUNCTION(BlueprintCallable, Category = "Physics")
+		FVector GetDragForce(float DeltaTime);
+
+
+		/*Calculate Gravity vector to be applied*/
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetGravityForce(float DeltaTime);
 
-		
+		/*Calculate Lift vector to be applied*/
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetLiftForce(float DeltaTime);
 

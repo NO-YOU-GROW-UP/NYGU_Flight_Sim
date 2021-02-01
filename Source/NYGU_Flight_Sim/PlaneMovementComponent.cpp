@@ -56,6 +56,9 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 	//Add Thrust Force
 	CurrentVelocity += GetForwardThrust(DeltaTime);
 
+	//Add Drag Force
+	CurrentVelocity += GetDragForce(DeltaTime);
+
 	//Add Gravity Force
 	CurrentVelocity += GetGravityForce(DeltaTime);
 
@@ -102,6 +105,11 @@ FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, ThrustInterpSpeed);
 	return DeltaTime * CurrentForwardThrust * GetOwner()->GetActorForwardVector();
 
+}
+
+FVector UPlaneMovementComponent::GetDragForce(float DeltaTime)
+{
+	return (((CurrentVelocity * CurrentVelocity)*0.5f) * Drag) * DeltaTime;
 }
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
