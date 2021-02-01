@@ -50,19 +50,19 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 {
 	
 	//interp from Current Speed To Projected
-	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, Drag);
+	
 
 	//Add Thrust Force
-	FVector Move =  DeltaTime * CurrentForwardThrust*GetOwner()->GetActorForwardVector();
+	CurrentVelocity = GetForwardThrust(DeltaTime);
 
 	//Add Gravity Force
-	Move += GetGravityForce(DeltaTime);
+	CurrentVelocity += GetGravityForce(DeltaTime);
 
 	//Add Lift Force
-	Move += GetLiftForce(DeltaTime);
+	CurrentVelocity += GetLiftForce(DeltaTime);
 
 	//change location
-	GetOwner()->AddActorWorldOffset(Move,true);
+	GetOwner()->AddActorWorldOffset(CurrentVelocity,true);
 }
 
 
@@ -94,6 +94,15 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 
 
 /************************Physics***************************/
+
+FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
+{
+
+	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, Drag);
+
+	return DeltaTime * CurrentForwardThrust * GetOwner()->GetActorForwardVector();
+
+}
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 {

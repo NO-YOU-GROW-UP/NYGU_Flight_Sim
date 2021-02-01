@@ -17,6 +17,10 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 
 		/***********************Physics Variables**********************/
 
+		/*Current Velocity Vector including thrust gravity lift drag*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		FVector CurrentVelocity;
+
 		/** Gravity 981 Default */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
@@ -68,6 +72,11 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		
 		/****Physics Functions******/
 
+
+		/*Calculate Forward thrust vector applied*/
+		UFUNCTION(BlueprintCallable, Category = "Physics")
+		FVector GetForwardThrust(float DeltaTime);
+
 		/*Calculate Gravity vector to being applied*/
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetGravityForce(float DeltaTime);
@@ -75,6 +84,8 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		
 		UFUNCTION(BlueprintCallable, Category = "Physics")
 		FVector GetLiftForce(float DeltaTime);
+
+
 
 
 		UFUNCTION()
