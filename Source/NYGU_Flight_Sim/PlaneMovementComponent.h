@@ -67,7 +67,9 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 		float ThrottleMultiplier;
 		
-		
+		/*How Fast the throttle will change the speed over 1 second*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrustInterpSpeed;
 		
 		
 		/****Physics Functions******/

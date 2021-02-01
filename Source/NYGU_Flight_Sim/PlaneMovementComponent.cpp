@@ -98,8 +98,8 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 {
 
-	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, Drag);
-
+	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, ThrustInterpSpeed);
+	f
 	return DeltaTime * CurrentForwardThrust * GetOwner()->GetActorForwardVector();
 
 }
