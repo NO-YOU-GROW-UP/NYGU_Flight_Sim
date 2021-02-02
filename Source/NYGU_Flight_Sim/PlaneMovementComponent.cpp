@@ -23,7 +23,13 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 
 	/*Plane Control Variable Defaults*/
 	ThrottleMultiplier = 2500.f;
-	ThrustInterpSpeed = 0.25;
+	ThrustInterpSpeed = 0.25f;
+	PitchSpeed = 100.f;
+	PitchInterpSpeed = 1.f;
+	RollSpeed = 100.f;
+	RollInterpSpeed = 1.f;
+	YawSpeed = 100.f;
+	YawInterpSpeed = 1.f;
 	// ...
 }
 
@@ -48,7 +54,7 @@ void UPlaneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	UpdateLocation(DeltaTime);
 }
 
-
+/*Updates Planes location with physics to be called every frame*/
 void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 {
 	
@@ -130,6 +136,5 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds, PitchSpeed);
 
 	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0, 0, CurrentPitch * PitchSpeed * GetWorld()->DeltaTimeSeconds)), true);
-
 
 }
