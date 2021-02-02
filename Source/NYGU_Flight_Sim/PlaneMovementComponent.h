@@ -48,7 +48,7 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 
 		/*Current Velocity Vector including thrust gravity lift drag*/
 		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-			FVector CurrentVelocity;
+		FVector CurrentVelocity;
 		
 		/****Physics Functions******/
 
@@ -83,41 +83,52 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		/**************Plane Control Variables**********/
 
 		/*Throttle Percentage 0 to 1*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Plane Control" , meta = (AllowPrivateAccess = "true"))
 		float ThrottlePercentage;
 
 		/*How Fast the throttle will change the speed over 1 second*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float ThrottleMultiplier;
 		
 		/*How Fast the throttle will change the speed over 1 second*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float ThrustInterpSpeed;
 
 		/*How quickly the plane can pitch*/
-		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float PitchSpeed;
 
 		/*How quickly the plane can begin to pitch*/
-		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float PitchInterpSpeed;
 
 		/*Current Pitch of the Plane*/
-		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float CurrentPitch;
 
 		/*How quickly the plane can roll*/
-		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float RollSpeed;
 
 		/*How quickly the plane can begin to roll*/
-		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float RollInterpSpeed;
 
 		/*Current Roll of the Plane*/
-		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
 		float CurrentRoll;
 		
+		/*How quickly the plane can Yaw*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
+		float YawSpeed;
+
+		/*How quickly the plane can begin to Yaw*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
+		float YawInterpSpeed;
+
+		/*Current Yaw of the Plane*/
+		UPROPERTY(BlueprintReadOnly, Category = "Plane Control", meta = (AllowPrivateAccess = "true"))
+		float CurrentYaw;
 		
 
 public:	

@@ -15,7 +15,6 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	/*Setup Physics Variables Defaults*/
 	Gravity = 981.f;
 	Drag = 0.25f;
-	
 	ProjectedThrust = 0;
 	CurrentForwardThrust = 0;
 	MaxThrust = 5000;
