@@ -72,34 +72,6 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 }
 
 
-//Add change throttle up or down with input axis
-void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
-{
-	//axis input -1 to 1 multiplied by the amount of speed change per second
-	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
- 
-	ProjectedThrust = FMath::Clamp<float>(ProjectedThrust + ChangeInThrust, 0, MaxThrust);
-	ThrottlePercentage = ProjectedThrust / MaxThrust;
-}
-
-//Set throttle percent of total max speed
-void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
-{
-
-	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0, 1);
-
-	ProjectedThrust = MaxThrust * ThrottlePercent;
-
-}
-
-void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
-{
-	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds,PitchSpeed);
-
-	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0,0,CurrentPitch*PitchSpeed*GetWorld()->DeltaTimeSeconds)), true);
-
-
-}
 
 
 /************************Physics***************************/
@@ -130,4 +102,34 @@ FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 }
 
 
+/*****************PLANE CONTROL***********************/
 
+
+//Add change throttle up or down with input axis
+void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
+{
+	//axis input -1 to 1 multiplied by the amount of speed change per second
+	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
+
+	ProjectedThrust = FMath::Clamp<float>(ProjectedThrust + ChangeInThrust, 0, MaxThrust);
+	ThrottlePercentage = ProjectedThrust / MaxThrust;
+}
+
+//Set throttle percent of total max speed
+void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
+{
+
+	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0, 1);
+
+	ProjectedThrust = MaxThrust * ThrottlePercent;
+
+}
+
+void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
+{
+	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds, PitchSpeed);
+
+	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0, 0, CurrentPitch * PitchSpeed * GetWorld()->DeltaTimeSeconds)), true);
+
+
+}
