@@ -40,7 +40,7 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 void UPlaneMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	ProjectedThrust = CurrentForwardThrust;
 	// ...
 	
 }
@@ -114,6 +114,9 @@ FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 //Add change throttle up or down with input axis
 void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 {
+
+
+	
 	//axis input -1 to 1 multiplied by the amount of speed change per second
 	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
 
