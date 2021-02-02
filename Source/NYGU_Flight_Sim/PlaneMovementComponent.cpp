@@ -133,8 +133,19 @@ void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 
 void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 {
-	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds, PitchSpeed);
+	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds, PitchInterpSpeed);
 
-	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0, 0, CurrentPitch * PitchSpeed * GetWorld()->DeltaTimeSeconds)), true);
+	FRotator NewRotation = FRotator(CurrentPitch * PitchSpeed * GetWorld()->DeltaTimeSeconds,0,0);
 
+	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
+
+}
+
+void UPlaneMovementComponent::AddRollInput(float PitchAxisInput)
+{
+
+}
+
+void UPlaneMovementComponent::AddYawInput(float PitchAxisInput)
+{
 }
