@@ -136,23 +136,23 @@ public:
 	UPlaneMovementComponent();
 
 	/*Add axis input to change forward thrust -1 to 1 float input*/
-	UFUNCTION(BlueprintCallable, Category = "Plane Control")
+	UFUNCTION(BlueprintCallable, Category = PlaneControl)
 	void AddThrottleInput(float ThrottleAxisInput);
 
 	/*Set Throttle to Specific percentage float between 0 and 1*/
-	UFUNCTION(BlueprintCallable, Category = "Plane Control")
+	UFUNCTION(BlueprintCallable, Category = PlaneControl)
 	void SetThrottlePercent(float ThrottlePercent);
 
 	/*Add axis input to change pitch -1 to 1 float input*/
-	UFUNCTION(BlueprintCallable, Category = "Plane Control")
+	UFUNCTION(BlueprintCallable, Category = PlaneControl)
 	void AddPitchInput(float PitchAxisInput);
 
 	/*Add axis input to change roll -1 to 1 float input*/
-	UFUNCTION(BlueprintCallable, Category = "Plane Control")
+	UFUNCTION(BlueprintCallable, Category = PlaneControl)
 	void AddRollInput(float RollAxisInput);
 
 	/*Add axis input to change yaw -1 to 1 float input*/
-	UFUNCTION(BlueprintCallable, Category = "Plane Control")
+	UFUNCTION(BlueprintCallable, Category = PlaneControl)
 	void AddYawInput(float YawAxisInput);
 
 

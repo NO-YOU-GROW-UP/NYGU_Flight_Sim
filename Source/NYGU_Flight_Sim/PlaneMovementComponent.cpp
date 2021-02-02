@@ -141,11 +141,21 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 
 }
 
-void UPlaneMovementComponent::AddRollInput(float PitchAxisInput)
+void UPlaneMovementComponent::AddRollInput(float RollAxisInput)
 {
+	CurrentRoll = FMath::FInterpTo(CurrentRoll, RollAxisInput, GetWorld()->DeltaTimeSeconds, RollInterpSpeed);
 
+	FRotator NewRotation = FRotator(0,0,CurrentRoll * RollSpeed * GetWorld()->DeltaTimeSeconds);
+
+	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
 }
 
-void UPlaneMovementComponent::AddYawInput(float PitchAxisInput)
+void UPlaneMovementComponent::AddYawInput(float YawAxisInput)
 {
+	CurrentYaw = FMath::FInterpTo(CurrentYaw, YawAxisInput, GetWorld()->DeltaTimeSeconds, YawInterpSpeed);
+
+	FRotator NewRotation = FRotator(0,CurrentYaw * YawSpeed * GetWorld()->DeltaTimeSeconds, 0);
+
+	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
+
 }
