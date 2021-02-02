@@ -30,7 +30,7 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		float TerminalVelocity;
 
 		/*Current forward thrust of Plane can set above 0 to start in the air*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float CurrentForwardThrust;
 
 		/*Max speed the plane can attempt to go*/

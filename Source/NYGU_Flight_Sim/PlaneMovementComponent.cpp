@@ -40,6 +40,7 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 void UPlaneMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentForwardThrust = ThrottlePercentage * MaxThrust;
 	ProjectedThrust = CurrentForwardThrust;
 	// ...
 	
