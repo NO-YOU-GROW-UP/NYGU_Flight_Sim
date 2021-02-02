@@ -12,10 +12,10 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	/*Setup Physics Values*/
+	/*Setup Physics Variables Defaults*/
 	Gravity = 981.f;
 	Drag = 0.25f;
-	ThrustInterpSpeed = 0.25;
+	
 	ProjectedThrust = 0;
 	CurrentForwardThrust = 0;
 	MaxThrust = 5000;
@@ -24,6 +24,7 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 
 	/*Plane Control Variable Defaults*/
 	ThrottleMultiplier = 2500.f;
+	ThrustInterpSpeed = 0.25;
 	// ...
 }
 

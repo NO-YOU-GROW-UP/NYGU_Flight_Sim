@@ -105,10 +105,19 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		/*Current Pitch of the Plane*/
 		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float CurrentPitch;
-		
+
+		/*How quickly the plane can roll*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float RollSpeed;
+
+		/*How quickly the plane can begin to roll*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float RollInterpSpeed;
+
 		/*Current Roll of the Plane*/
 		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float CurrentRoll;
+		
 		
 
 public:	
