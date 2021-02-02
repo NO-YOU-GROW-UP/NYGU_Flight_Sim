@@ -17,10 +17,6 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 
 		/***********************Physics Variables**********************/
 
-		/*Current Velocity Vector including thrust gravity lift drag*/
-		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		FVector CurrentVelocity;
-
 		/** Gravity 981 Default */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
@@ -29,6 +25,10 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Drag;
 		
+		/*Fasest Speed the object can go*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float TerminalVelocity;
+
 		/*Current forward thrust of Plane can set above 0 to start in the air*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float CurrentForwardThrust;
@@ -46,31 +46,9 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float EqualLiftSpeed;
 
-		
-
-		/*How quickly the plane can pitch*/
-		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float PitchSpeed;
-		
-		/*Current Pitch of the Plane*/
+		/*Current Velocity Vector including thrust gravity lift drag*/
 		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float CurrentPitch;
-		
-
-		/**************Plane Mechanical Variables**********/
-
-		/*Throttle Percentage 0 to 1*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
-		float ThrottlePercentage;
-
-		/*How Fast the throttle will change the speed over 1 second*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
-		float ThrottleMultiplier;
-		
-		/*How Fast the throttle will change the speed over 1 second*/
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
-		float ThrustInterpSpeed;
-		
+			FVector CurrentVelocity;
 		
 		/****Physics Functions******/
 
@@ -94,9 +72,44 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 
 
 
-
+		/*Update Plane actor location in world*/
 		UFUNCTION()
 		void UpdateLocation(float DeltaTime);
+		
+		
+		
+		
+
+		/**************Plane Control Variables**********/
+
+		/*Throttle Percentage 0 to 1*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrottlePercentage;
+
+		/*How Fast the throttle will change the speed over 1 second*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrottleMultiplier;
+		
+		/*How Fast the throttle will change the speed over 1 second*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
+		float ThrustInterpSpeed;
+
+		/*How quickly the plane can pitch*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float PitchSpeed;
+
+		/*How quickly the plane can begin to pitch*/
+		UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float PitchInterpSpeed;
+
+		/*Current Pitch of the Plane*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float CurrentPitch;
+		
+		/*Current Roll of the Plane*/
+		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float CurrentRoll;
+		
 
 public:	
 	// Sets default values for this component's properties

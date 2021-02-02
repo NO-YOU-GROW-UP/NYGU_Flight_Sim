@@ -21,6 +21,8 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	MaxThrust = 5000;
 	EqualLiftSpeed = 3000;
 
+
+	/*Plane Control Variable Defaults*/
 	ThrottleMultiplier = 2500.f;
 	// ...
 }
@@ -54,10 +56,10 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 	
 
 	//Add Thrust Force
-	CurrentVelocity += GetForwardThrust(DeltaTime);
+	CurrentVelocity = GetForwardThrust(DeltaTime);
 
 	//Add Drag Force
-	CurrentVelocity += GetDragForce(DeltaTime);
+	//CurrentVelocity += GetDragForce(DeltaTime);
 
 	//Add Gravity Force
 	CurrentVelocity += GetGravityForce(DeltaTime);
@@ -93,7 +95,10 @@ void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 {
 	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds,PitchSpeed);
+
 	GetOwner()->AddActorLocalRotation(FQuat(FRotator(0,0,CurrentPitch*PitchSpeed*GetWorld()->DeltaTimeSeconds)), true);
+
+
 }
 
 
@@ -109,7 +114,7 @@ FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetDragForce(float DeltaTime)
 {
-	return (((CurrentVelocity * CurrentVelocity)*0.5f) * Drag) * DeltaTime;
+	return (GetOwner()->GetActorForwardVector() * -1) * CurrentForwardThrust * DeltaTime;
 }
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
