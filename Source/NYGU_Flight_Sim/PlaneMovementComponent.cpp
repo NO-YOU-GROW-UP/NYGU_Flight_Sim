@@ -14,6 +14,7 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 
 	/*Setup Physics Variables Defaults*/
 	PhysicsMode = Realistic;
+	WorldUnitMultiplier = 1.f;
 	Mass = 1000.f;
 	Gravity = 981.f;
 	Drag = 0.05f;
