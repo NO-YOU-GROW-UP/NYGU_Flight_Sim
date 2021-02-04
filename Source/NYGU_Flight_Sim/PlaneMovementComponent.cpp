@@ -13,10 +13,13 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	/*Setup Physics Variables Defaults*/
+	PhysicsMode = Realistic;
+	Mass = 1000.f;
 	Gravity = 981.f;
-	Drag = 0.25f;
-	ProjectedThrust = 0;
-	CurrentForwardThrust = 0;
+	Drag = 0.05f;
+	ForwardDragArea = 100.f;
+	AirDensity = 1.225f;
+	
 	MaxThrust = 5000;
 	EqualLiftSpeed = 3000;
 
@@ -59,20 +62,33 @@ void UPlaneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 {
 	
-	//interp from Current Speed To Projected
+	if(PhysicsMode == Realistic)
+	{
+	  
+		//Add Thrust Force
+		CurrentVelocity += GetForwardThrust(DeltaTime);
 	
 
-	//Add Thrust Force
-	CurrentVelocity = GetForwardThrust(DeltaTime);
-
-	//Add Drag Force
-	//CurrentVelocity += GetDragForce(DeltaTime);
+		//Add Drag Force
+		CurrentVelocity += GetDragForce(DeltaTime);
+	
+	
+	}
+	
+	else if (PhysicsMode == Basic) 
+	{
+		//Add Thrust Force
+		CurrentVelocity = GetForwardThrust(DeltaTime);
+	}
 
 	//Add Gravity Force
 	CurrentVelocity += GetGravityForce(DeltaTime);
 
 	//Add Lift Force
 	CurrentVelocity += GetLiftForce(DeltaTime);
+
+	//limit fastest velocity to max thrust
+	if (CurrentVelocity.Size() > MaxThrust) { CurrentVelocity *= MaxThrust / CurrentVelocity.Size(); }
 
 	//change location
 	GetOwner()->AddActorWorldOffset(CurrentVelocity,true);
@@ -93,7 +109,17 @@ FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetDragForce(float DeltaTime)
 {
-	return (GetOwner()->GetActorForwardVector() * -1) * CurrentForwardThrust * DeltaTime;
+	//avoid divide by 0
+	if (Mass == 0) Mass = 1;
+
+	//find the amount of forward velocity based on current velocity
+	FVector ActorForwardVector = GetOwner()->GetActorForwardVector();
+	float velocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
+	
+	velocity = ((AirDensity * velocity * velocity * 0.5) * ForwardDragArea * Drag) / Mass;
+	
+	// pysics drag equation 
+	return ( ActorForwardVector * -1) * velocity * DeltaTime;
 }
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
@@ -103,6 +129,9 @@ FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
+	//avoid divide by 0
+	if (EqualLiftSpeed == 0) EqualLiftSpeed = 1;
+
 	float Lift = FMath::Clamp<float>((CurrentForwardThrust / EqualLiftSpeed), 0, 1) * Gravity * DeltaTime;
 	
 	return FVector(0,0,Lift);
@@ -115,8 +144,8 @@ FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 //Add change throttle up or down with input axis
 void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 {
-
-
+	//avoid divide by 0
+	if (MaxThrust == 0) MaxThrust = 1;
 	
 	//axis input -1 to 1 multiplied by the amount of speed change per second
 	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();

@@ -7,6 +7,17 @@
 #include "Math/UnrealMathUtility.h"
 #include "PlaneMovementComponent.generated.h"
 
+UENUM()
+enum PhysicsMode
+{
+	Realistic  UMETA(DisplayName = "Realistic"),
+	Basic      UMETA(DisplayName = "Basic"),
+	
+};
+
+
+
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
@@ -17,17 +28,31 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 
 		/***********************Physics Variables**********************/
 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		TEnumAsByte<PhysicsMode> PhysicsMode;
+
+		/** Mass in Kg of Plane */
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float Mass;
+		
 		/** Gravity 981 Default */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Gravity;
+
+		/** Air Density in kg/m^3 */
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float AirDensity;
+
 	    
 		/*Drag Coefficient Between 0 and 1 */
 	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Drag;
 		
-		/*Fasest Speed the object can go*/
+		/*Area of front of plane in M^2 to calculate drag force*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
-		float TerminalVelocity;
+		float ForwardDragArea;
+
+		
 
 		/*Current forward thrust of Plane can set above 0 to start in the air*/
 		UPROPERTY(BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
@@ -166,3 +191,4 @@ public:
 
 		
 };
+
