@@ -31,6 +31,10 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		TEnumAsByte<PhysicsMode> PhysicsMode;
 
+	    /** Convert Simulation to game units decrease the unit to make game fit in game world */
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float WorldUnitMultiplier;
+
 		/** Mass in Kg of Plane */
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Mass;
@@ -47,10 +51,20 @@ class NYGU_FLIGHT_SIM_API UPlaneMovementComponent : public UActorComponent
 		/*Drag Coefficient Between 0 and 1 */
 	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float Drag;
+
 		
 		/*Area of front of plane in M^2 to calculate drag force*/
 		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
 		float ForwardDragArea;
+
+		
+		//Lift Coefficient Between 0 and 1 */
+	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float Lift;
+
+		//Lift Area of Wings */
+	    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Physics, meta = (AllowPrivateAccess = "true"))
+		float WingArea;
 
 		
 

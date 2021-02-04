@@ -17,6 +17,8 @@ UPlaneMovementComponent::UPlaneMovementComponent()
 	Mass = 1000.f;
 	Gravity = 981.f;
 	Drag = 0.05f;
+	Lift = 0.5f;
+	WingArea = 46.f;
 	ForwardDragArea = 100.f;
 	AirDensity = 1.225f;
 	
@@ -90,6 +92,7 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 	//limit fastest velocity to max thrust
 	if (CurrentVelocity.Size() > MaxThrust) { CurrentVelocity *= MaxThrust / CurrentVelocity.Size(); }
 
+	CurrentVelocity *= WorldUnitMultiplier;
 	//change location
 	GetOwner()->AddActorWorldOffset(CurrentVelocity,true);
 }
@@ -116,9 +119,9 @@ FVector UPlaneMovementComponent::GetDragForce(float DeltaTime)
 	FVector ActorForwardVector = GetOwner()->GetActorForwardVector();
 	float velocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
 	
+	//Drag force equation and convert to acceleration
 	velocity = ((AirDensity * velocity * velocity * 0.5) * ForwardDragArea * Drag) / Mass;
-	
-	// pysics drag equation 
+	 
 	return ( ActorForwardVector * -1) * velocity * DeltaTime;
 }
 
@@ -129,12 +132,36 @@ FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
-	//avoid divide by 0
-	if (EqualLiftSpeed == 0) EqualLiftSpeed = 1;
-
-	float Lift = FMath::Clamp<float>((CurrentForwardThrust / EqualLiftSpeed), 0, 1) * Gravity * DeltaTime;
+	float LiftForce;
 	
-	return FVector(0,0,Lift);
+	if (PhysicsMode == Realistic) 
+	{
+		//avoid divided by 0 
+		if (Mass == 0)Mass = 1;
+
+		FVector ActorForwardVector = GetOwner()->GetActorForwardVector();
+		float Velocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
+
+		//lift force equation
+		LiftForce = Lift * (AirDensity * Velocity * Velocity * 0.5) * WingArea;
+
+		//convert to acceleration
+		LiftForce /= Mass;
+
+		LiftForce = FMath::Clamp<float>(LiftForce, 0, Gravity);
+	}
+	else if (PhysicsMode == Basic)
+	{
+		//avoid divide by 0
+		if (EqualLiftSpeed == 0) EqualLiftSpeed = 1;
+
+		LiftForce = FMath::Clamp<float>((CurrentForwardThrust / EqualLiftSpeed), 0, 1) * Gravity;
+
+	}
+	
+	
+	
+	return FVector(0,0,LiftForce*DeltaTime);
 }
 
 
