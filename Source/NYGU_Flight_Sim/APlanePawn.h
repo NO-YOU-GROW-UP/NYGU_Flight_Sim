@@ -1,18 +1,24 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright NO YOU GROW UP LLC All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlaneMovementComponent.h"
+#include "GameFramework/Character.h"
 #include "APlanePawn.generated.h"
 
-
 UCLASS()
-class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
+class NYGU_FLIGHT_SIM_API APlanePawn : public APawn
 {
 	GENERATED_BODY()
-	
+public:
+	// Sets default values for this pawn's properties
+	APlanePawn();
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	/* Plane Meshes Body Glass Ailerons Flaps and Rudder */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* PlaneBodyMesh;
@@ -44,9 +50,7 @@ class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Plane, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* RightFlaps;
 
-	/**********************************************************************************************/
-
-
+protected:
 
 	/*Camera Boom Behind Plane*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -59,20 +63,5 @@ class NYGU_FLIGHT_SIM_API AAPlanePawn : public APawn
 	/*Plane Movement Component*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UPlaneMovementComponent* PlaneMovementComponent;
-
-public:
-	// Sets default values for this pawn's properties
-	AAPlanePawn();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };

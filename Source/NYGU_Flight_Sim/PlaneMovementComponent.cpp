@@ -1,83 +1,55 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright NO YOU GROW UP LLC All Rights Reserved.
 
 #include "PlaneMovementComponent.h"
-
-
+#include "APlanePawn.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 UPlaneMovementComponent::UPlaneMovementComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	/*Setup Physics Variables Defaults*/
-	PhysicsMode = Realistic;
-	WorldUnitMultiplier = 1.f;
-	Mass = 1000.f;
-	Gravity = 981.f;
-	Drag = 0.05f;
-	Lift = 0.5f;
-	WingArea = 46.f;
-	ForwardDragArea = 100.f;
-	AirDensity = 1.225f;
-	
-	MaxThrust = 5000;
-	EqualLiftSpeed = 3000;
-
-
-	/*Plane Control Variable Defaults*/
-	ThrottleMultiplier = 2500.f;
-	ThrustInterpSpeed = 0.25f;
-	PitchSpeed = 100.f;
-	PitchInterpSpeed = 1.f;
-	RollSpeed = 100.f;
-	RollInterpSpeed = 1.f;
-	YawSpeed = 100.f;
-	YawInterpSpeed = 1.f;
-	// ...
+	PrimaryComponentTick.bStartWithTickEnabled = true;
 }
-
-
-
 
 // Called when the game starts
 void UPlaneMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentForwardThrust = ThrottlePercentage * MaxThrust;
+	CurrentForwardThrust = StartingThrottlePercentage * MaxThrust;
 	ProjectedThrust = CurrentForwardThrust;
-	// ...
-	
+	PlanePawn = GetOwner<APlanePawn>();
 }
 
+void UPlaneMovementComponent::HandleImpact(const FHitResult& Hit, float TimeSlice /*= 0.f*/, const FVector& MoveDelta /*= FVector::ZeroVector*/)
+{
+	if (Hit.IsValidBlockingHit() && bSimulatePhysicsOnImpact)
+	{
+		//For now just start physics sim on crash
+		if (PlanePawn->PlaneBodyMesh && PlanePawn->PlaneBodyMesh->IsSimulatingPhysics() == false)
+		{
+			PlanePawn->PlaneBodyMesh->SetSimulatePhysics(true);
+		}
+	}
+}
 
-// Called every frame
 void UPlaneMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
 	UpdateLocation(DeltaTime);
 }
 
 /*Updates Planes location with physics to be called every frame*/
 void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
-{
-	
+{	
 	if(PhysicsMode == Realistic)
 	{
-	  
 		//Add Thrust Force
 		CurrentVelocity += GetForwardThrust(DeltaTime);
-	
 
 		//Add Drag Force
 		CurrentVelocity += GetDragForce(DeltaTime);
-	
-	
 	}
-	
 	else if (PhysicsMode == Basic) 
 	{
 		//Add Thrust Force
@@ -91,89 +63,78 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 	CurrentVelocity += GetLiftForce(DeltaTime);
 
 	//limit fastest velocity to max thrust
-	if (CurrentVelocity.Size() > MaxThrust) { CurrentVelocity *= MaxThrust / CurrentVelocity.Size(); }
+	CurrentSpeed = CurrentVelocity.Size();
+	if (CurrentSpeed > MaxThrust) 
+	{ 
+		//Decrease velocity to max thrust speed
+		CurrentVelocity *= MaxThrust / CurrentSpeed;
+	}
 
 	CurrentVelocity *= WorldUnitMultiplier;
-	//change location
-	GetOwner()->AddActorWorldOffset(CurrentVelocity,true);
+
+	FHitResult Hit(1.f);
+	SafeMoveUpdatedComponent(CurrentVelocity, UpdatedComponent->GetComponentQuat(), true, Hit);
+	if (Hit.bBlockingHit)
+	{
+		HandleImpact(Hit); //apply damage possibly here
+		SlideAlongSurface(CurrentVelocity, 1.f, Hit.Normal, Hit, true);
+	}	
 }
 
-
-
-
 /************************Physics***************************/
-
 FVector UPlaneMovementComponent::GetForwardThrust(float DeltaTime)
 {
-
 	CurrentForwardThrust = FMath::FInterpTo(CurrentForwardThrust, ProjectedThrust, DeltaTime, ThrustInterpSpeed);
 	return DeltaTime * CurrentForwardThrust * GetOwner()->GetActorForwardVector();
-
 }
 
 FVector UPlaneMovementComponent::GetDragForce(float DeltaTime)
 {
-	//avoid divide by 0
-	if (Mass == 0) Mass = 1;
-
 	//find the amount of forward velocity based on current velocity
 	FVector ActorForwardVector = GetOwner()->GetActorForwardVector();
 	float velocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
 	
 	//Drag force equation and convert to acceleration
-	velocity = ((AirDensity * velocity * velocity * 0.5) * ForwardDragArea * Drag) / Mass;
+	velocity = ((AirDensity * velocity * velocity * 0.5) * ForwardDragArea * Drag) / PlaneMass;
 	 
-	return ( ActorForwardVector * -1) * velocity * DeltaTime;
+	return ( ActorForwardVector * -1.f) * velocity * DeltaTime;
 }
 
 FVector UPlaneMovementComponent::GetGravityForce(float DeltaTime)
 {
-	return FVector(0,0, -1 * Gravity * DeltaTime);
+	return FVector(0.f,0.f, -1.f * Gravity * DeltaTime);
 }
 
 FVector UPlaneMovementComponent::GetLiftForce(float DeltaTime)
 {
-	float LiftForce;
+	float LiftForce = 0.f;
 	
 	if (PhysicsMode == Realistic) 
 	{
-		//avoid divided by 0 
-		if (Mass == 0)Mass = 1;
-
 		FVector ActorForwardVector = GetOwner()->GetActorForwardVector();
-		float Velocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
+		float ForwardVelocity = FVector::DotProduct(CurrentVelocity, ActorForwardVector);
 
 		//lift force equation
-		LiftForce = Lift * (AirDensity * Velocity * Velocity * 0.5) * WingArea;
+		LiftForce = Lift * (AirDensity * ForwardVelocity * ForwardVelocity * 0.5) * WingArea;
 
 		//convert to acceleration
-		LiftForce /= Mass;
+		LiftForce /= PlaneMass;
 
 		LiftForce = FMath::Clamp<float>(LiftForce, 0, Gravity);
 	}
 	else if (PhysicsMode == Basic)
 	{
-		//avoid divide by 0
-		if (EqualLiftSpeed == 0) EqualLiftSpeed = 1;
-
 		LiftForce = FMath::Clamp<float>((CurrentForwardThrust / EqualLiftSpeed), 0, 1) * Gravity;
-
 	}
-	
-	
 	
 	return FVector(0,0,LiftForce*DeltaTime);
 }
-
-
-/*****************PLANE CONTROL***********************/
-
 
 //Add change throttle up or down with input axis
 void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 {
 	//avoid divide by 0
-	if (MaxThrust == 0) MaxThrust = 1;
+	if (MaxThrust == 0.f) MaxThrust = 1.f;
 	
 	//axis input -1 to 1 multiplied by the amount of speed change per second
 	float ChangeInThrust = ThrottleAxisInput * ThrottleMultiplier * GetWorld()->GetDeltaSeconds();
@@ -185,30 +146,44 @@ void UPlaneMovementComponent::AddThrottleInput(float ThrottleAxisInput)
 //Set throttle percent of total max speed
 void UPlaneMovementComponent::SetThrottlePercent(float ThrottlePercent)
 {
-
-	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0, 1);
-
+	ThrottlePercentage = FMath::Clamp<float>(ThrottlePercent, 0.f, 1.f);
 	ProjectedThrust = MaxThrust * ThrottlePercent;
-
 }
 
 void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 {
 	CurrentPitch = FMath::FInterpTo(CurrentPitch, PitchAxisInput, GetWorld()->DeltaTimeSeconds, PitchInterpSpeed);
 
-	FRotator NewRotation = FRotator(CurrentPitch * PitchSpeed * GetWorld()->DeltaTimeSeconds,0,0);
+	float AdjustedPitchSpeed = PitchSpeed;
 
-	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
+	FRotator NewRotation = FRotator(CurrentPitch * AdjustedPitchSpeed * GetWorld()->DeltaTimeSeconds,0,0);
 
+	FHitResult Hit(1.f);
+	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true, &Hit);
+
+	if (Hit.bBlockingHit)
+	{
+		HandleImpact(Hit); //apply damage possibly here
+		SlideAlongSurface(CurrentVelocity, 1.f, Hit.Normal, Hit, true);
+	}
 }
 
 void UPlaneMovementComponent::AddRollInput(float RollAxisInput)
 {
 	CurrentRoll = FMath::FInterpTo(CurrentRoll, RollAxisInput, GetWorld()->DeltaTimeSeconds, RollInterpSpeed);
 
-	FRotator NewRotation = FRotator(0,0,CurrentRoll * RollSpeed * GetWorld()->DeltaTimeSeconds);
+	float AdjustedRollSpeed = RollSpeed;
 
-	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
+	FRotator NewRotation = FRotator(0,0,CurrentRoll * AdjustedRollSpeed * GetWorld()->DeltaTimeSeconds);
+
+	FHitResult Hit(1.f);
+	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true, &Hit);
+
+	if (Hit.bBlockingHit)
+	{
+		HandleImpact(Hit); //apply damage possibly here
+		SlideAlongSurface(CurrentVelocity, 1.f, Hit.Normal, Hit, true);
+	}
 }
 
 void UPlaneMovementComponent::AddYawInput(float YawAxisInput)
@@ -218,5 +193,4 @@ void UPlaneMovementComponent::AddYawInput(float YawAxisInput)
 	FRotator NewRotation = FRotator(0,CurrentYaw * YawSpeed * GetWorld()->DeltaTimeSeconds, 0);
 
 	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true);
-
 }
