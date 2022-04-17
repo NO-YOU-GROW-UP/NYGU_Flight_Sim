@@ -72,7 +72,7 @@ void UPlaneMovementComponent::UpdateLocation(float DeltaTime)
 
 	CurrentVelocity *= WorldUnitMultiplier;
 
-	FHitResult Hit(1.f);
+	FHitResult Hit;
 	SafeMoveUpdatedComponent(CurrentVelocity, UpdatedComponent->GetComponentQuat(), true, Hit);
 	if (Hit.bBlockingHit)
 	{
@@ -158,7 +158,7 @@ void UPlaneMovementComponent::AddPitchInput(float PitchAxisInput)
 
 	FRotator NewRotation = FRotator(CurrentPitch * AdjustedPitchSpeed * GetWorld()->DeltaTimeSeconds,0,0);
 
-	FHitResult Hit(1.f);
+	FHitResult Hit;
 	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true, &Hit);
 
 	if (Hit.bBlockingHit)
@@ -176,7 +176,7 @@ void UPlaneMovementComponent::AddRollInput(float RollAxisInput)
 
 	FRotator NewRotation = FRotator(0,0,CurrentRoll * AdjustedRollSpeed * GetWorld()->DeltaTimeSeconds);
 
-	FHitResult Hit(1.f);
+	FHitResult Hit;
 	GetOwner()->AddActorLocalRotation(FQuat(NewRotation), true, &Hit);
 
 	if (Hit.bBlockingHit)
